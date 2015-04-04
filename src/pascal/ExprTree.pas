@@ -406,62 +406,56 @@ begin
 	InsertAsLast(ToExpr^.SubExprs, X);
 end;
 
+{Convierte la expresión pasada a cadena de caracteres}
 function ExprToStr(X : Expr) : String;
-var
-	k : TExprIt; R : String;
-begin
-	R:=''; { resultado }
-	
-	if (X <> Nil) then
-	begin
-		if (X^.Head = 'List') then
-		begin
-			R:=R+'{';
-			{ añade la cadena de cada sub-expresión }
-			MoveToFirst(X^.SubExprs, k);
-			
-			while (IsAtNode(k)) do
-			begin
-				R:=R + ExprToStr(ExprAt(k));
-				
-			 	MoveToNext(k);	
-			 	
-				{ si no es la última, añade una coma } 	
-				if (IsAtNode(k)) then R:=R + ',';
-			end;
-			
-			R:=R + '}';
-		end
-		else
-		begin
-			if (X^.Head = 'Symbol') then
-				R:=R + X^.Terminal
-			else
-			begin
-				R:=R + X^.Head;
-				{ si tiene sub-expresiones (es X[a,b,Sin[y]] por ejemplo) }
-				if (not IsEmptyTExprList(X^.SubExprs)) then
-				begin
-					R:=R + '[';
-					{ añade sub-expresiones como cadenas }
-					MoveToFirst(X^.SubExprs, k);
-					while (IsAtNode(k)) do
-					begin
-						R:=R + ExprToStr(ExprAt(k));
-						
-						MoveToNext(k);
-						
-						if (IsAtNode(k)) then R:=R + ',';
-					end;
-					
-					R:=R + ']';
-				end;
-			end;
-		end;
-	end;
-	
-	ExprToStr:=R;
-end;
+	Var
+		R:String;
+		k:TExprIt;
+	Begin
+		R:='';
+		If(X<>NIL)
+			Then Begin
+				If (X^.Head='List') {Si es una lista, abre una llave, inserta las subexpresiones y luego cierra la llave}
+					Then
+						Begin
+							R:=R+'{';
+							MoveToFirst(X^.SubExprs,k);
+							If(IsAtNode(k)) Then
+								Begin
+									R:=R+ExprToStr(ExprAt(k));
+									MoveToNext(k);
+								End;
+							While(IsAtNode(k)) Do
+								Begin
+									R:=R+','+ExprToStr(ExprAt(k));
+									MoveToNext(k);
+								End;
+							R:=R+'}';
+						End
+					Else 
+						Begin
+							If(X^.Head='Symbol') {Si es un símbolo, simplemente lo inserta}
+								Then R:=R+X^.Terminal
+								Else {Si es una función, añade el nombre de la función y habre un corchete. Luego añade las subexpresiones y cierra el corchete}
+									Begin
+										R:=R+X^.Head+'[';
+										MoveToFirst(X^.SubExprs,k);
+										If(IsAtNode(k)) Then
+											Begin
+												R:=R+ExprToStr(ExprAt(k));
+												MoveToNext(k);
+											End;
+										While(IsAtNode(k)) Do
+											Begin
+												R:=R+','+ExprToStr(ExprAt(k));
+												MoveToNext(k);
+											End;
+										R:=R+ExprToStr(ExprAt(k))+']';
+									End;
+						End;
+				End;
+		ExprToStr:=R;
+	End;
 
 procedure TreeForm(X : Expr);
 

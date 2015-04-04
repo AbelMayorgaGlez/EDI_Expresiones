@@ -55,27 +55,27 @@ implementation
 		
 		+ Si X es Nil, devuelve Nil.
 }
+{Devuelve una expresión que es una copia exacta de X}
 function DeepCopy(X : Expr) : Expr;
-var
-	k : TExprIt;
-begin
-	if (X <> Nil) then
-	begin
-		{ Copia los datos de la raíz }
-		DeepCopy:=AllocExpr(X^.Head, X^.Terminal);
-		{ Recorre con k la lista de sub-expresiones }
-		MoveToFirst(X^.SubExprs, k);		
-		while (IsAtNode(k)) do
-		begin
-			{ Añade al resultado una copia de cada sub-expresión de X }
-			AddSubExpr(DeepCopy(ExprAt(k)), DeepCopy);
-			{ Mueve el iterador al siguiente elemento de la lista }
-			MoveToNext(k);
-		end;
-	end
-	else
-		DeepCopy:=Nil;
-end;
+	Var
+		k:TExprIt;
+		Nuevo:Expr;
+	Begin
+		If (X=NIL)
+			Then
+				DeepCopy:=NIL
+			Else
+				Begin
+					Nuevo:=AllocExpr(X^.Head,X^.Terminal);{Copia el nodo raíz}
+					MoveToFirst(X^.SubExprs,k);
+					While (IsAtNode(k)) Do{Copia todos los hijos y los añade a la expresión copiada}
+						Begin
+							InsertAsLast(Nuevo^.SubExprs,DeepCopy(ExprAt(k)));
+							MoveToNext(k);
+						End;
+					DeepCopy:=Nuevo;
+				End;
+	End;
 
 {
 	Usa la operación del TAD lista de expresiones.
@@ -90,38 +90,32 @@ end;
 		+ Mismo nodo raíz.
 		+ Sus sub-expresiones son iguales (recursividad directa) ó no tienen.
 }
-function Equals(X1, X2 : Expr) : Boolean;
-var
-	kX1, kX2 : TExprIt;
-begin
-	{ si Head y Terminal son iguales ... }
-	if ((X1^.Head = X2^.Head) and (X1^.Terminal = X2^.Terminal)) then
-	begin
-		Equals:=True;
-		{ ... y tienen el mismo número de sub-expresiones ... }
-		if (LengthOf(X1) = LengthOf(X2)) then
-		begin
-			MoveToFirst(X1^.SubExprs, kX1);
-			MoveToFirst(X2^.SubExprs, kX2);			
-			{ ... y ... }
-			while (IsAtNode(kX1) and IsAtNode(kX2)) do
-			begin
-				{ ... cada sub-expresión es igual ... }
-				Equals:=Equals and Equals(ExprAt(kX1),ExprAt(kX2));
-			
-				MoveToNext(kX1);
-				MoveToNext(kX2);				
-			end;
-		end
-		else
-			{ diferente número de sub-expresiones }
-			Equals:=False;
-	end
-	else
-		{ ni siquiera Head y Terminal son iguales }
-		Equals:=False;
-end;
 
+{Compara las dos expresiones y devuelve cierto si son iguales}
+function Equals(X1, X2 : Expr) : Boolean;
+	Var
+		k,j:TExprIt;
+	Begin
+		Equals:=True;
+		If(X1=NIL)XOr(X2=NIL) {Si solo uno de las dos expresiones está vacía, son distintas}
+			Then Equals:=False
+			Else Begin
+				If(ExprCmp(X1,X2)<>'=')
+					Then Equals:=False
+					Else Begin
+						MoveToFirst(X1^.SubExprs,k);
+						MoveToFirst(X2^.SubExprs,j);
+						While(IsAtNode(k))And(IsAtNode(j)) Do {Compara las subexpresiones de las expresiones pasadas}
+							Begin
+								Equals:=(Equals) And (Equals(ExprAt(k),ExprAt(j)));
+								MoveToNext(k);
+								MoveToNext(j);
+							End;
+						If(IsAtNode(k))xor(IsAtNode(j)) {Si ha acabado de recorrer una subexpresión antes que otra, entonces son distintos}
+							Then Equals:=False;
+						End;
+				End;
+	End;
 
 {
 	+ Si X1 y X2 son símbolos, se comparan sus terminales.

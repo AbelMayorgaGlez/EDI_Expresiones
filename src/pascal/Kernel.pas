@@ -280,6 +280,8 @@ begin
 			EvaluateExpr:=Partition(SubExpr(Ex,1), SubExpr(Ex,2), ec)
 		else if (Ex^.Head = 'RemoveAll') then
 			EvaluateExpr:=RemoveAll(SubExpr(Ex,1), SubExpr(Ex,2))
+		else if (Ex^.Head = 'RemoveAll2') then
+			EvaluateExpr:=RemoveAll2(SubExpr(Ex,1), SubExpr(Ex,2))
 		else if (Ex^.Head = 'TreeForm') then
 		begin
 			TreeForm(SubExpr(Ex,1));
