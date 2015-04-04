@@ -1,0 +1,10 @@
+Show - muestra los valores asociados a símbolos
+
+Ejemplos
+
+	In[1]:=Set[A1,{a,b,c}]
+	Out[1]:={a,b,c}
+	
+	In[2]:=Show
+	Set[A1,{a,b,c}]
+	Out[2]:={a,b,c}

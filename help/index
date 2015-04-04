@@ -1,0 +1,21 @@
+Expresiones conocidas.
+
+	Set - Asocia un valor a un símbolo.
+	
+	Show - Muestra los símbolos definidos.
+	
+	TreeForm - Muestra árboles de expresión.
+	
+	
+Más ayuda con ? <expresión> ; por ejemplo "? Set"
+
+Entrada/Salida.
+
+	Con << se cargan expresiones de un fichero de texto.
+
+		Ejemplo: << tests/test-01.in
+
+	Con >> se guardan las definiciones hechas con Set en un fichero de texto.
+	
+		Ejemplo: >> trabajo.txt
+

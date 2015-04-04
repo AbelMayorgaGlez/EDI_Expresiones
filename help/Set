@@ -1,0 +1,10 @@
+Set[s,e] - asigna una expresión e a un símbolo s en el kernel
+	+ La evaluación de s de aquí en adelante será e
+	+ La expresión e se evalúa antes de ser asignada a s
+
+Ejemplos
+
+	Set[A1,{a,b,c}]
+	Set[Z,Partition[{1,2,3,4},2]]
+	
+	Tras Set[A1,{a,b,c}], al evaluar {A1,A1} se obtiene {{a,b,c},{a,b,c}}

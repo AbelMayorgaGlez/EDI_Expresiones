@@ -1,0 +1,24 @@
+TreeForm[e] - muestra el árbol de expresión creado al analizar la expresión.
+
+Ejemplos
+
+	TreeForm[{a,b,c}]
+
+	List
+	|    Symbol(a)
+	|    Symbol(b)
+	|    Symbol(c)
+	
+	TreeForm[{a,b,{c,d,{e,f}}}]
+	
+	List
+	|    Symbol(a)
+	|    Symbol(b)
+	|    List
+	|    |    Symbol(c)
+	|    |    Symbol(d)
+	|    |    List
+	|    |    |    Symbol(e)
+	|    |    |    Symbol(f)
+	
+	

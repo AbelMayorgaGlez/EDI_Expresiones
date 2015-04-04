@@ -1,0 +1,8 @@
+Flatten[e] - elimina las listas anidadas en la expresión e
+
+Ejemplos
+
+	Flatten[{a,b,c}] = {a,b,c}
+	Flatten[{{a},b,c}] = {a,b,c}
+	
+	Flatten[{{1,2},{3,4},{5,6}}] = {1,2,3,4,5,6}
